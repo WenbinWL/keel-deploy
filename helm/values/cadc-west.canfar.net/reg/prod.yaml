@@ -320,6 +320,10 @@ application:
       url: "https://ws.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/reg/maq/sandbox/capabilities"
     - id: "ivo://cadc.nrc.ca/meetings"
       url: "https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/meetings/capabilities"
+    - id: "ivo://cadc.nrc.ca/waterloo/luskan"
+      url: "https://cadc-east-01.canfar.net/waterloo/luskan/capabilities"
+    - id: "ivo://cadc.nrc.ca/waterloo/minoc"
+      url: "https://cadc-east-01.canfar.net/waterloo/minoc/capabilities"
 
   # Derived from IVOA Registry (reg) user interface entries in the reg-applications.properties file.
   applicationEntries:
