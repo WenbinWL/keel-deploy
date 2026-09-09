@@ -22,7 +22,7 @@ deployment:
 
       kueue:
         rbac:
-          create: false
+          create: true
         default:
           queueName: "src-default"
           priorityClass: "high"
@@ -73,3 +73,4 @@ rbac:
 
 serviceAccount:
   create: true
+  name: src-skaha-prod
