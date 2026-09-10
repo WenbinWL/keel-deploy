@@ -45,14 +45,12 @@ spec:
             - name: SITE_CAPABILITIES_GATEKEEPER_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "gatekeeper.siteCapabilities.secretName is required"
-                    .Values.gatekeeper.siteCapabilities.secretName }}
+                  name: {{ required "gatekeeper.siteCapabilities.secretName is required" .Values.gatekeeper.siteCapabilities.secretName }}
                   key: client_id
             - name: SITE_CAPABILITIES_GATEKEEPER_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "gatekeeper.siteCapabilities.secretName is required"
-                    .Values.gatekeeper.siteCapabilities.secretName }}
+                  name: {{ required "gatekeeper.siteCapabilities.secretName is required" .Values.gatekeeper.siteCapabilities.secretName | quote }}
                   key: client_secret
 
           ports:
