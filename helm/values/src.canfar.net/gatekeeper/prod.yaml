@@ -11,7 +11,7 @@ gatekeeper:
   image:
     repository: at88mph/ska-src-dm-da-service-gatekeeper
     tag: 0.3.3
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   siteCapabilities:
     existingSecret: true
     secretName: site-capabilities-client-credentials
