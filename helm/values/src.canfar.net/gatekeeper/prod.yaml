@@ -8,8 +8,8 @@ gatekeeper:
   resolver: 169.254.25.10
   namespace: canfar-src-production
   image:
-    repository: at88mph/ska-src-dm-da-service-gatekeeper
-    tag: 0.3.2
+    repository: registry.gitlab.com/ska-telescope/src/src-dm/ska-src-dm-da-service-gatekeeper/gatekeeper
+    tag: 0.3.2-dev.cf865ee3b
     pullPolicy: IfNotPresent
   siteCapabilities:
     existingSecret: true
