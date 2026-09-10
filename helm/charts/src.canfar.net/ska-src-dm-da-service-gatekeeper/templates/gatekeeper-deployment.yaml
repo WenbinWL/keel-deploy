@@ -66,14 +66,18 @@ spec:
             - name: gatekeeper-config
               mountPath: /etc/gatekeeper-config.yml
               subPath: gatekeeper-config.yml
+            {{- with .Values.gatekeeper.resolver }}
             - name: gatekeeper-nginx-resolver
               mountPath: /etc/nginx/conf.d/resolver.conf
               subPath: resolver.conf
+            {{- end }}
 
       volumes:
         - name: gatekeeper-config
           configMap:
             name: gatekeeper-config
+        {{- with .Values.gatekeeper.resolver }}
         - name: gatekeeper-nginx-resolver
           configMap:
             name: gatekeeper-nginx-resolver
+        {{- end }}

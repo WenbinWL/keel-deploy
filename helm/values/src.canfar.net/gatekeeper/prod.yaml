@@ -5,7 +5,8 @@ echo:
     name: canfar-src-production
 
 gatekeeper:
-  resolver: 169.254.25.10
+  # resolver: 169.254.25.10
+  # resolver: 10.96.0.10
   namespace: canfar-src-production
   image:
     repository: at88mph/ska-src-dm-da-service-gatekeeper

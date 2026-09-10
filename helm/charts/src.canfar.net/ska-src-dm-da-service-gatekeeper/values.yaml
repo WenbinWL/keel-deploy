@@ -35,7 +35,7 @@ gatekeeper:
     pullPolicy: IfNotPresent
   # the DNS server to use for lookups, default for kube-dns is 10.96.0.10
   # check via e.g. $ kubectl get svc -n kube-system kube-dns
-  resolver: 10.96.0.10
+  # resolver: 10.96.0.10
   ingress:
     enabled: true
     host: gatekeeper.srcnet.skao.int
