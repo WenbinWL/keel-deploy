@@ -6,8 +6,8 @@ kubernetesClusterDomain: keel-prod.local
 # Restore replicaCount, minReplicas, and maxReplicas to 3 and delete enabled.
 replicaCount: "1"
 
-# Optional science-platform Metrics API (same Helm release as Skaha).
-# When enabled, the chart injects SKAHA_METRICS_BACKEND_URL on Tomcat so
+# Science-platform Metrics API (same Helm release as Skaha).
+# The chart injects SKAHA_METRICS_BACKEND_URL on Tomcat so
 # GET /v1/session?view=stats reads capacity and allocated from
 # GET /apis/canfar.net/v1alpha1/metrics/platform/canfar.
 # ClusterQueues `cadc` and `src` match
@@ -26,6 +26,7 @@ metricsBackend:
   rbac:
     enabled: false
   image:
+    repository: images.opencadc.org/platform/metrics
     # v0.1.6 and later reject retired METRICS_* names. v0.1.7 is the current image.
     tag: v0.1.7
   env:
@@ -67,7 +68,7 @@ deployment:
   hostname: staging.canfar.net
 
   skaha:
-    image: images-integration.canfar.net/skaha-system/skaha:2026.3-rc.2
+    image: images.opencadc.org/platform/skaha:v1.6-rc.1
     imagePullPolicy: Always
     registryURL:
       - https://staging.canfar.net/reg
