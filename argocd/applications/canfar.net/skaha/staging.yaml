@@ -12,7 +12,8 @@ spec:
   sources:
     - repoURL: https://images.opencadc.org/chartrepo/platform
       chart: skaha
-      targetRevision: 1.8.1
+      # Requires science-platform helm 1.9.0 (PR #1203) published to this chartrepo.
+      targetRevision: 1.9.0
       helm:
         valueFiles:
           - $values/helm/values/canfar.net/skaha/base.yaml
