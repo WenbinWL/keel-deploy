@@ -7,10 +7,11 @@ kubernetesClusterDomain: keel-prod.local
 replicaCount: "1"
 
 # Science-platform Metrics API (same Helm release as Skaha).
-# REQUIRES Skaha Helm chart >= 1.9.0 (opencadc/science-platform#1203 published).
-# Do not sync this overlay against chart 1.8.x: Metrics is always required, the
-# cache integrity Secret is chart-owned (uuidv4 + lookup), and Redis is only
-# via metricsBackend.redis.urlSecret (not Bitnami auto-injection).
+# REQUIRES Skaha Helm chart >= 1.10.0 (opencadc/science-platform#1211 published).
+# Do not sync this overlay against older charts: values live under `metrics`
+# (chart 1.10.0 fails on `metricsBackend`), the cache integrity Secret is
+# chart-owned, and Metrics shares this release's Bitnami Redis by default
+# (set metrics.redis.url only to use a different Redis).
 #
 # The chart injects SKAHA_METRICS_BACKEND_URL on Tomcat so
 # GET /v1/session?view=stats reads capacity and allocated from
@@ -21,7 +22,7 @@ replicaCount: "1"
 # Capsule on keel-prod forbids chart-managed ClusterRole/ClusterRoleBinding.
 # Keep rbac.enabled false. Metrics uses a dedicated ServiceAccount; grant that
 # SA ClusterQueue get/list ambiently (same Managed K8s Issues track as Skaha).
-metricsBackend:
+metrics:
   platformName: canfar
   # Must match the Mimir/Prometheus series label on this cluster.
   clusterName: keel-prod
@@ -41,10 +42,6 @@ metricsBackend:
   otlp:
     # Prometheus 3.x OTLP receiver: :4318 is closed; use :9090 path.
     endpoint: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
-  redis:
-    urlSecret:
-      name: canfar-skaha-staging-metrics-redis
-      key: redis-url
   env:
     METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
     # Chart telemetry.metrics stays false; remaining OTEL identity via env.
@@ -52,12 +49,6 @@ metricsBackend:
     METRICS_OTEL__EXPORT_INTERVAL_MILLIS: "60000"
     METRICS_OTEL__DEPLOYMENT_ENVIRONMENT: "staging"
     METRICS_OTEL__KUBERNETES_NAMESPACE: "canfar-system-staging"
-
-# Redis URL for Metrics (Bitnami master Service of this release). No auth.
-# Duplicated into the session workload namespace by the chart secrets template.
-secrets:
-  canfar-skaha-staging-metrics-redis:
-    redis-url: cmVkaXM6Ly9jYW5mYXItc2thaGEtc3RhZ2luZy1yZWRpcy1tYXN0ZXIuY2FuZmFyLXN5c3RlbS1zdGFnaW5nLnN2Yy5rZWVsLXByb2QubG9jYWw6NjM3OS8w
 
 # Skaha Tomcat OTEL metrics (chart skaha >= 1.6.1). Same Prometheus OTLP
 # receiver as Metrics above: Java agent uses the OTLP base URL and appends
