@@ -6,40 +6,62 @@ kubernetesClusterDomain: keel-prod.local
 # Restore replicaCount, minReplicas, and maxReplicas to 3 and delete enabled.
 replicaCount: "1"
 
-# Optional science-platform Metrics API (same Helm release as Skaha).
-# When enabled, the chart injects SKAHA_METRICS_BACKEND_URL on Tomcat so
+# Science-platform Metrics API (same Helm release as Skaha).
+# REQUIRES Skaha Helm chart >= 1.10.1 (opencadc/science-platform#1212 published).
+# Do not sync this overlay against older charts: values live under `metrics`
+# (chart 1.10.0 fails on `metricsBackend`), the cache integrity Secret is
+# chart-owned, and Metrics shares this release's Bitnami Redis by default
+# (set metrics.redis.url only to use a different Redis).
+#
+# The chart injects SKAHA_METRICS_BACKEND_URL on Tomcat so
 # GET /v1/session?view=stats reads capacity and allocated from
 # GET /apis/canfar.net/v1alpha1/metrics/platform/canfar.
 # ClusterQueues `cadc` and `src` match
 # keel-deploy/manifests/kueue/clusterQueues/prod.cadc.yml and prod.src.yml.
-# Session and user reads stay in this release's session namespace.
-# METRICS_REDIS_URL comes from this release's Bitnami Redis
-# (metricsBackend.redis.enabled, chart default true).
-# Names follow science-platform/metrics docs/environment-contracts.md.
 #
-# Capsule on keel-prod forbids chart-managed ClusterRole/ClusterRoleBinding
-# (create dry-run → Forbidden via capsule-proxy). Keep rbac.enabled false; do
-# not flip it. ClusterQueue get/list for SA canfar-skaha-staging is ambient /
-# pre-provisioned outside this release (track under Jira "Managed K8s Issues").
+# Capsule on keel-prod forbids chart-managed ClusterRole/ClusterRoleBinding.
+# Keep rbac.enabled false. Metrics uses a dedicated ServiceAccount; grant that
+# SA ClusterQueue get/list ambiently (same Managed K8s Issues track as Skaha).
 metrics:
-  clusterName: "keel-prod"
+  platformName: canfar
+  # Must match the Mimir/Prometheus series label on this cluster.
+  clusterName: keel-prod
   rbac:
     enabled: false
+    namespaces:
+      - canfar-staging-workloads
   image:
-    # v0.1.6 and later reject retired METRICS_* names. v0.1.7 is the current image.
+    repository: images.opencadc.org/platform/metrics
     tag: v0.1.7
+  # Chart >= 1.10.1 always allows this namespace (Redis) and DNS on port 53.
+  # Cilium ignores ipBlock for the kubernetes ClusterIP and matches the API
+  # server after Service translation, so allow its endpoint port (6443).
+  # Mimir and the Prometheus OTLP receiver live in the monitoring namespace.
+  networkPolicy:
+    egress:
+      kubeApiServer:
+        - ports:
+            - port: 6443
+              protocol: TCP
+      promql:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+      otlp:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+  prometheus:
+    url: "http://mimir-distributed-gateway.monitoring.svc/prometheus"
+  otlp:
+    # Prometheus 3.x OTLP receiver: :4318 is closed; use :9090 path.
+    endpoint: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
   env:
     METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
-    METRICS_PROVIDERS__KUEUE__NAMESPACES: '["canfar-staging-workloads"]'
-    # Metrics appends /api/v1/query. Multitenancy is off, so no tenant header.
-    METRICS_PROVIDERS__PROMQL__BASE_URL: "http://mimir-distributed-gateway.monitoring.svc/prometheus"
-    # Cache integrity key. Chart 1.8.1 renders metricsBackend.env as literal env.
-    METRICS_CACHE__KEY_SECRET: "do45TQ9ctvD_Ii0cS_R4Tvx94AEasnPrbD_gVE3-UxU"
-    # Chart telemetry.metrics stays false; Metrics OTEL is this env block.
-    # Prometheus 3.x OTLP receiver: :4318 is closed; use :9090/api/v1/otlp/v1/metrics.
-    METRICS_OTEL__METRICS_ENABLED: "true"
+    # Chart telemetry.metrics stays false; remaining OTEL identity via env.
     METRICS_OTEL__SERVICE_NAME: "skaha-metrics"
-    METRICS_OTEL__EXPORTER_OTLP_ENDPOINT: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
     METRICS_OTEL__EXPORT_INTERVAL_MILLIS: "60000"
     METRICS_OTEL__DEPLOYMENT_ENVIRONMENT: "staging"
     METRICS_OTEL__KUBERNETES_NAMESPACE: "canfar-system-staging"
