@@ -22,16 +22,13 @@ replicaCount: "1"
 # not flip it. ClusterQueue get/list for SA canfar-skaha-staging is ambient /
 # pre-provisioned outside this release (track under Jira "Managed K8s Issues").
 metricsBackend:
-  enabled: true
+  clusterName: "keel-prod"
   rbac:
     enabled: false
   image:
     # v0.1.6 and later reject retired METRICS_* names. v0.1.7 is the current image.
     tag: v0.1.7
   env:
-    METRICS_PLATFORM_NAME: "canfar"
-    # Must match the Mimir series label cluster on this cluster.
-    METRICS_CLUSTER_NAME: "keel-prod"
     METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
     METRICS_PROVIDERS__KUEUE__NAMESPACES: '["canfar-staging-workloads"]'
     # Metrics appends /api/v1/query. Multitenancy is off, so no tenant header.
@@ -67,7 +64,7 @@ deployment:
   hostname: staging.canfar.net
 
   skaha:
-    image: images-integration.canfar.net/skaha-system/skaha:2026.3-rc.2
+    image: images-integration.canfar.net/skaha-system/skaha:2026.3-rc.3
     imagePullPolicy: Always
     registryURL:
       - https://staging.canfar.net/reg
