@@ -21,7 +21,7 @@ replicaCount: "1"
 # (create dry-run → Forbidden via capsule-proxy). Keep rbac.enabled false; do
 # not flip it. ClusterQueue get/list for SA canfar-skaha-staging is ambient /
 # pre-provisioned outside this release (track under Jira "Managed K8s Issues").
-metricsBackend:
+metrics:
   clusterName: "keel-prod"
   rbac:
     enabled: false

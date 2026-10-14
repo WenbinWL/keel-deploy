@@ -1,4 +1,4 @@
-metricsBackend:
+metrics:
   clusterName: "keel-prod"
   rbac:
     enabled: false
