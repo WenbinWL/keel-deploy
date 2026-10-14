@@ -7,7 +7,7 @@ kubernetesClusterDomain: keel-prod.local
 replicaCount: "1"
 
 # Science-platform Metrics API (same Helm release as Skaha).
-# REQUIRES Skaha Helm chart >= 1.10.0 (opencadc/science-platform#1211 published).
+# REQUIRES Skaha Helm chart >= 1.10.1 (opencadc/science-platform#1212 published).
 # Do not sync this overlay against older charts: values live under `metrics`
 # (chart 1.10.0 fails on `metricsBackend`), the cache integrity Secret is
 # chart-owned, and Metrics shares this release's Bitnami Redis by default
@@ -33,10 +33,26 @@ metrics:
   image:
     repository: images.opencadc.org/platform/metrics
     tag: v0.1.7
-  # Chart-owned NetworkPolicy defaults deny kube/redis/mimir egress; leave off
-  # until exact CIDRs are known for canfar-system-staging.
+  # Chart >= 1.10.1 always allows this namespace (Redis) and DNS on port 53.
+  # Cilium ignores ipBlock for the kubernetes ClusterIP and matches the API
+  # server after Service translation, so allow its endpoint port (6443).
+  # Mimir and the Prometheus OTLP receiver live in the monitoring namespace.
   networkPolicy:
-    enabled: false
+    egress:
+      kubeApiServer:
+        - ports:
+            - port: 6443
+              protocol: TCP
+      promql:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+      otlp:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
   prometheus:
     url: "http://mimir-distributed-gateway.monitoring.svc/prometheus"
   otlp:

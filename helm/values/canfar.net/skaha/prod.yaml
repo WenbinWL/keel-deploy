@@ -49,6 +49,30 @@ metricsBackend:
     METRICS_PROVIDERS__KUEUE__TOKEN_FILE: "/var/run/secrets/kubernetes.io/serviceaccount/token"
     METRICS_PROVIDERS__KUEUE__CA_FILE: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
 
+# Metrics NetworkPolicy egress for chart >= 1.10.1 (ignored by 1.8.1). The
+# chart always allows this namespace (Redis) and DNS on port 53. Cilium ignores
+# ipBlock for the kubernetes ClusterIP and matches the API server after Service
+# translation, so allow its endpoint port (6443). Mimir and the Prometheus OTLP
+# receiver live in the monitoring namespace. Move metricsBackend into this key
+# when prod adopts chart 1.10.x; a leftover metricsBackend key fails the render.
+metrics:
+  networkPolicy:
+    egress:
+      kubeApiServer:
+        - ports:
+            - port: 6443
+              protocol: TCP
+      promql:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+      otlp:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+
 # Skaha Tomcat OTEL metrics (chart skaha >= 1.6.1). Same Prometheus OTLP
 # receiver as Metrics above: Java agent uses the OTLP base URL and appends
 # /v1/metrics; Metrics Python exporter is given the full metrics path.
