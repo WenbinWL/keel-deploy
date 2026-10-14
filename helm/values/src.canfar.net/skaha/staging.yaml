@@ -6,7 +6,6 @@ metrics:
     # v0.1.6 and later reject retired METRICS_* names. v0.1.7 is the current image.
     tag: v0.1.7
   env:
-    METRICS_ENVIRONMENT: "staging"
     METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
     METRICS_PROVIDERS__KUEUE__NAMESPACES: '["canfar-staging-src-workloads"]'
     # Metrics appends /api/v1/query. Multitenancy is off, so no tenant header.
