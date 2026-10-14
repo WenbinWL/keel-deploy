@@ -10,9 +10,9 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://goharbor-core.cadc-harbor-opencadc.svc.keel-prod.local/client/storage-ui
+    - repoURL: goharbor-core.cadc-harbor-opencadc.svc.keel-prod.local/client
       targetRevision: 1.4.8
-      path: .
+      chart: storage-ui
       helm:
         valueFiles:
           - $values/helm/values/src.canfar.net/storage-ui/base.yaml
