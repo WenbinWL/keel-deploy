@@ -11,7 +11,7 @@ spec:
   project: canfar
   sources:
     - repoURL: oci://images.opencadc.org/platform/skaha
-      targetRevision: 1.8.1
+      targetRevision: 1.10.1
       path: .
       helm:
         valueFiles:
