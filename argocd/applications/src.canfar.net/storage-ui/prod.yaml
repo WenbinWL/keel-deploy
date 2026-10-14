@@ -10,7 +10,7 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://images.opencadc.org/client/storage-ui
+    - repoURL: oci://goharbor-core.cadc-harbor-opencadc.svc.keel-prod.local
       targetRevision: 1.4.8
       path: .
       helm:
