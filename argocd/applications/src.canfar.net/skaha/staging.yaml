@@ -23,9 +23,17 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: canfar-src-staging
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: src-skaha-staging-skaha-metrics-cache
+      namespace: canfar-src-staging
+      jsonPointers:
+        - /data/key-secret
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
     automated:
       prune: true
       selfHeal: true
