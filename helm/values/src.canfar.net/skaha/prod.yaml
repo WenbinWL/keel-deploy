@@ -78,5 +78,5 @@ rbac:
     create: false
 
 serviceAccount:
-  create: true
-  name: src-skaha-prod
+  create: false
+  name: canfar-skaha-production
