@@ -10,9 +10,8 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: https://images.opencadc.org/chartrepo/platform
-      chart: skaha
-      # Requires science-platform helm 1.9.0 (PR #1203) published to this chartrepo.
+    - repoURL: oci://images.opencadc.org/platform/skaha
+      path: .
       targetRevision: 1.9.0
       helm:
         valueFiles:
