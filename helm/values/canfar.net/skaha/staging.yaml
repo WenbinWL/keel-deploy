@@ -91,7 +91,7 @@ deployment:
     registryURL:
       - https://staging.canfar.net/reg
 
-    registryHosts: "images-integration.canfar.net"
+    registryHosts: "images.canfar.net images-integration.canfar.net"
 
     sessions:
       hostname: workloads.canfar.net

@@ -8,10 +8,6 @@ ingress:
         - path: /science-portal
           pathType: Prefix
 
-image:
-  repository: images.opencadc.org/platform/science-portal
-  tag: 2.3-beta2
-
 app:
   api:
     storage: "https://staging.canfar.net/arc/nodes/home/"
