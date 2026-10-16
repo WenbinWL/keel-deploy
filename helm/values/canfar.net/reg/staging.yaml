@@ -45,7 +45,7 @@ volumes:
       secretName: canfar-skaha-staging-cookie-signature-public-key
 volumeMounts:
   - name: rsa-signature-pub
-    mountPath: /config/RsaSignaturePub.key
+    mountPath: /usr/share/tomcat/config/RsaSignaturePub.key
     subPath: RsaSignaturePub.key
     readOnly: true
 
