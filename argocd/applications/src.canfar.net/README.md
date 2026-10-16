@@ -60,11 +60,11 @@ Staging platform services deploy from OpenCADC chart repositories. Production SK
 
 | Application | Chart repo | Chart | Version | Destination namespace |
 | ----------- | ---------- | ----- | ------- | --------------------- |
-| `src-science-portal-staging` | `images.opencadc.org/chartrepo/platform` | `science-portal` | 2.0.0 | `canfar-src-staging` |
-| `src-cavern-staging` | platform | `cavern` | 0.10.0 | `canfar-src-staging` |
-| `src-skaha-staging` | platform | `skaha` | 1.6.0 | `canfar-src-staging` |
-| `src-storage-ui-staging` | `images.opencadc.org/chartrepo/client` | `storageui` | 1.4.4 | `canfar-src-staging` |
-| `src-posix-mapper-staging` | platform | `posixmapper` | 0.6.0 | `canfar-src-staging` |
+| `src-science-portal-staging` | `oci://images.opencadc.org/platform/charts` | `science-portal` | 2.0.0 | `canfar-src-staging` |
+| `src-cavern-staging` | `oci://images.opencadc.org/platform/charts` | `cavern` | 0.10.0 | `canfar-src-staging` |
+| `src-skaha-staging` | `oci://images.opencadc.org/platform/charts` | `skaha` | 1.6.0 | `canfar-src-staging` |
+| `src-storage-ui-staging` | `oci://images.opencadc.org/client/charts` | `storageui` | 1.4.4 | `canfar-src-staging` |
+| `src-posix-mapper-staging` | `platform/charts` | `posixmapper` | 0.6.0 | `canfar-src-staging` |
 | `canfar-kueue-staging-src` | *(Git path, not Helm)* | — | — | `canfar-src-workloads` |
 
 Helm-based children use **multiple sources** (Argo CD 2.6+): chart from OpenCADC plus a Git source with `ref: values` so value files resolve as `$values/helm/values/src.canfar.net/<service>/...`.

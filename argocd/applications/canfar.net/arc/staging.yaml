@@ -10,7 +10,7 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://images.opencadc.org/platform/cavern
+    - repoURL: oci://images.opencadc.org/platform/charts/cavern
       path: .
       targetRevision: 0.10.7
       helm:

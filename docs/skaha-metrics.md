@@ -53,7 +53,7 @@ helm/values/src.canfar.net/skaha/
   staging.yaml          # metricsBackend.enabled: false
 ```
 
-Each Skaha Application pulls the **skaha** chart from `https://images.opencadc.org/chartrepo/platform` (`targetRevision` on the Application) and overlays values from this Git repo (`ref: values`). Do not treat `deployments/helm/applications/archived/skaha` as the install source.
+Each Skaha Application pulls the **skaha** chart from `oci://images.opencadc.org/platform/charts/skaha` (`targetRevision` on the Application) and overlays values from this Git repo (`ref: values`). Do not treat `deployments/helm/applications/archived/skaha` as the install source.
 
 Kueue ClusterQueues that Metrics reads are documented in [Kueue ClusterQueues](kueue.md).
 

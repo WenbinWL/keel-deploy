@@ -10,7 +10,7 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://images.opencadc.org/platform/science-portal
+    - repoURL: oci://images.opencadc.org/platform/charts/science-portal
       targetRevision: 2.2.2
       path: .
       helm:

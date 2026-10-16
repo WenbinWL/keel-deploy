@@ -10,8 +10,8 @@ metadata:
 spec:
   project: cadc
   sources:
-    - repoURL: https://images.opencadc.org/chartrepo/core
-      chart: reg
+    - repoURL: oci://images.opencadc.org/core/charts/reg
+      path: .
       targetRevision: 1.2.1
       helm:
         valueFiles:

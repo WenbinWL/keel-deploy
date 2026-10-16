@@ -10,7 +10,7 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://images.opencadc.org/core/reg
+    - repoURL: oci://images.opencadc.org/core/charts/reg
       path: .
       targetRevision: 1.2.1
       helm:
