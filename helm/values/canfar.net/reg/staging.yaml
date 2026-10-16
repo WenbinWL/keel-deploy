@@ -39,16 +39,6 @@ application:
     - id: "ivo://cadc.nrc.ca/canfar-dashboard"
       url: "https://staging.canfar.net/"
 
-volumes:
-  - name: rsa-signature-pub
-    secret:
-      secretName: canfar-skaha-staging-cookie-signature-public-key
-volumeMounts:
-  - name: rsa-signature-pub
-    mountPath: /usr/share/tomcat/config/RsaSignaturePub.key
-    subPath: RsaSignaturePub.key
-    readOnly: true
-
 ingress:
   hosts:
     - host: staging.canfar.net
