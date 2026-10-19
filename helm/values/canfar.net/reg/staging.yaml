@@ -1,6 +1,10 @@
 global:
   hostname: staging.canfar.net
 
+image:
+  repository: images-integration.canfar.net/skaha-system/reg
+  tag: 1.2.2-20261019T182435
+
 application:
   identityManagerClass: ca.nrc.cadc.ac.ACIdentityManager
   rsaSignaturePublicKey:
