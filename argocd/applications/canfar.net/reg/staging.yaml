@@ -10,9 +10,9 @@ metadata:
 spec:
   project: canfar
   sources:
-    - repoURL: oci://images.opencadc.org/core/charts/reg
+    - repoURL: oci://images-integration.canfar.net/skaha-system/charts/reg
       path: .
-      targetRevision: 1.2.1
+      targetRevision: 1.2.2
       helm:
         valueFiles:
           - $values/helm/values/canfar.net/reg/base.yaml

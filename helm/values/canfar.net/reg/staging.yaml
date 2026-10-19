@@ -2,6 +2,9 @@ global:
   hostname: staging.canfar.net
 
 application:
+  identityManagerClass: ca.nrc.cadc.ac.ACIdentityManager
+  rsaSignaturePublicKey:
+    existingSecret: "canfar-skaha-staging-cookie-signature-public-key"
   serviceEntries:
     - id: "ivo://canfar.net/staging-src/cavern"
       url: "https://staging-src.canfar.net/cavern/capabilities"
