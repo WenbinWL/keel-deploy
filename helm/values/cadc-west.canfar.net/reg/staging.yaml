@@ -1,8 +1,3 @@
-image:
-  repository: bucket.canfar.net/reg-with-content
-  tag: "1.2.1-20250917T224327"  
-imagePullSecrets: 
-  - name: bucket-registry-auth
 application:
   # Ensure OAI is disabled.
   authority: ""
@@ -347,3 +342,16 @@ ingress:
       paths:
         - path: /reg
           pathType: Prefix
+
+# Optionally mount a custom CA certificate
+volumeMounts:
+  - mountPath: /usr/share/tomcat/.ssl/
+    name: servops-cert
+    readOnly: true
+
+# Create the CA certificate volume to be mounted in extraVolumeMounts
+volumes:
+  - name: servops-cert
+    secret:
+      defaultMode: 420
+      secretName: servops-clientcert

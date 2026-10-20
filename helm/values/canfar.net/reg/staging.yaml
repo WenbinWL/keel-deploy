@@ -51,3 +51,16 @@ ingress:
 
 imagePullSecrets:
   - name: bucket-registry-auth
+
+# Optionally mount a custom CA certificate
+volumeMounts:
+  - mountPath: /usr/share/tomcat/.ssl/
+    name: servops-cert
+    readOnly: true
+
+# Create the CA certificate volume to be mounted in extraVolumeMounts
+volumes:
+  - name: servops-cert
+    secret:
+      defaultMode: 420
+      secretName: servops-clientcert
