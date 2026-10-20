@@ -23,40 +23,21 @@ replicaCount: "3"
 # (create dry-run → Forbidden via capsule-proxy). Keep rbac.enabled false; do
 # not flip it. ClusterQueue get/list for SA canfar-skaha-prod is ambient /
 # pre-provisioned outside this release (track under Jira "Managed K8s Issues").
-metricsBackend:
-  enabled: true
+metrics:
+  platformName: canfar
+  # Must match the Mimir/Prometheus series label on this cluster.
+  clusterName: keel-prod
   rbac:
     enabled: false
+    namespaces:
+      - canfar-staging-workloads
   image:
     repository: images.opencadc.org/platform/metrics
     tag: v0.1.7
-  env:
-    METRICS_ENVIRONMENT: "production"
-    METRICS_CLUSTER_NAME: "canfar"
-    METRICS_SOURCES__PLATFORM: "kueue"
-    METRICS_CACHE__BACKEND: "redis"
-    METRICS_CACHE__TTL_SECONDS: "300"
-    METRICS_CACHE__SCOPE_TTL_SECONDS: '{"platform":300}'
-    # Chart telemetry.metrics must stay false; wire Metrics OTEL via env.
-    # Prometheus 3.x OTLP receiver (verified from canfar-system-production):
-    # classic :4318 is not open; use :9090/api/v1/otlp/v1/metrics.
-    METRICS_OTEL_METRICS_ENABLED: "true"
-    METRICS_OTEL_SERVICE_NAME: "skaha-metrics"
-    METRICS_OTEL_EXPORTER_OTLP_ENDPOINT: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
-    METRICS_OTEL_EXPORT_INTERVAL_MILLIS: "60000"
-    METRICS_PROVIDERS__KUEUE__KUBE_API_URL: "https://kubernetes.default.svc"
-    METRICS_PROVIDERS__KUEUE__KUBE_VERIFY_TLS: "true"
-    METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
-    METRICS_PROVIDERS__KUEUE__TOKEN_FILE: "/var/run/secrets/kubernetes.io/serviceaccount/token"
-    METRICS_PROVIDERS__KUEUE__CA_FILE: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-
-# Metrics NetworkPolicy egress for chart >= 1.10.1 (ignored by 1.8.1). The
-# chart always allows this namespace (Redis) and DNS on port 53. Cilium ignores
-# ipBlock for the kubernetes ClusterIP and matches the API server after Service
-# translation, so allow its endpoint port (6443). Mimir and the Prometheus OTLP
-# receiver live in the monitoring namespace. Move metricsBackend into this key
-# when prod adopts chart 1.10.x; a leftover metricsBackend key fails the render.
-metrics:
+  # Chart >= 1.10.1 always allows this namespace (Redis) and DNS on port 53.
+  # Cilium ignores ipBlock for the kubernetes ClusterIP and matches the API
+  # server after Service translation, so allow its endpoint port (6443).
+  # Mimir and the Prometheus OTLP receiver live in the monitoring namespace.
   networkPolicy:
     egress:
       kubeApiServer:
@@ -73,6 +54,18 @@ metrics:
             - namespaceSelector:
                 matchLabels:
                   kubernetes.io/metadata.name: monitoring
+  prometheus:
+    url: "http://mimir-distributed-gateway.monitoring.svc/prometheus"
+  otlp:
+    # Prometheus 3.x OTLP receiver: :4318 is closed; use :9090 path.
+    endpoint: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
+  env:
+    METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
+    # Chart telemetry.metrics stays false; remaining OTEL identity via env.
+    METRICS_OTEL__SERVICE_NAME: "skaha-metrics"
+    METRICS_OTEL__EXPORT_INTERVAL_MILLIS: "60000"
+    METRICS_OTEL__DEPLOYMENT_ENVIRONMENT: "production"
+    METRICS_OTEL__KUBERNETES_NAMESPACE: "canfar-system-production"
 
 # Skaha Tomcat OTEL metrics (chart skaha >= 1.6.1). Same Prometheus OTLP
 # receiver as Metrics above: Java agent uses the OTLP base URL and appends
