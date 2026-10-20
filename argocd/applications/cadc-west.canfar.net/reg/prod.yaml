@@ -22,9 +22,7 @@ spec:
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    # Intentionally cadc-system for now to avoid moving the live registry.
-    # Other cadc-west-01 production apps use cadc-system-production.
-    namespace: cadc-system
+    namespace: cadc-system-production
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
