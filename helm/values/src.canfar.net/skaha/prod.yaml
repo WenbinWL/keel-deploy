@@ -1,3 +1,47 @@
+metrics:
+  platformName: canfar
+  # Must match the Mimir/Prometheus series label on this cluster.
+  clusterName: keel-prod
+  rbac:
+    enabled: false
+    namespaces:
+      - canfar-src-workloads
+  image:
+    repository: images.opencadc.org/platform/metrics
+    tag: v0.1.7
+  # Chart >= 1.10.1 always allows this namespace (Redis) and DNS on port 53.
+  # Cilium ignores ipBlock for the kubernetes ClusterIP and matches the API
+  # server after Service translation, so allow its endpoint port (6443).
+  # Mimir and the Prometheus OTLP receiver live in the monitoring namespace.
+  networkPolicy:
+    egress:
+      kubeApiServer:
+        - ports:
+            - port: 6443
+              protocol: TCP
+      promql:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+      otlp:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: monitoring
+  prometheus:
+    url: "http://mimir-distributed-gateway.monitoring.svc/prometheus"
+  otlp:
+    # Prometheus 3.x OTLP receiver: :4318 is closed; use :9090 path.
+    endpoint: "http://prometheus-operated.monitoring.svc:9090/api/v1/otlp/v1/metrics"
+  env:
+    METRICS_PROVIDERS__KUEUE__CLUSTER_QUEUES: '["cadc","src"]'
+    # Chart telemetry.metrics stays false; remaining OTEL identity via env.
+    METRICS_OTEL__SERVICE_NAME: "skaha-metrics"
+    METRICS_OTEL__EXPORT_INTERVAL_MILLIS: "60000"
+    METRICS_OTEL__DEPLOYMENT_ENVIRONMENT: "production"
+    METRICS_OTEL__KUBERNETES_NAMESPACE: "canfar-system-production"
+
 deployment:
   hostname: src.canfar.net
   skaha:
