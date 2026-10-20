@@ -2,6 +2,10 @@ application:
   # Ensure OAI is disabled.
   authority: ""
 
+  identityManagerClass: ca.nrc.cadc.ac.ACIdentityManager
+  rsaSignaturePublicKey:
+    existingSecret: "cookie-signature-public-key"
+
   # Derived from IVOA Registry (reg) service entries in the reg-resource-caps.properties file.
   serviceEntries:
     - id: "ivo://cadc.nrc.ca/reg"
