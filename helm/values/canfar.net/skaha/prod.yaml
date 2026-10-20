@@ -28,7 +28,8 @@ metricsBackend:
   rbac:
     enabled: false
   image:
-    tag: v0.1.5
+    repository: images.opencadc.org/platform/metrics
+    tag: v0.1.7
   env:
     METRICS_ENVIRONMENT: "production"
     METRICS_CLUSTER_NAME: "canfar"

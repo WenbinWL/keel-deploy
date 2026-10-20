@@ -11,7 +11,7 @@ spec:
   project: canfar
   sources:
     - repoURL: oci://images.opencadc.org/platform/charts/science-portal
-      targetRevision: 2.2.2
+      targetRevision: 2.3.0
       path: .
       helm:
         valueFiles:
