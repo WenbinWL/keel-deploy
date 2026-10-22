@@ -33,6 +33,7 @@ application:
 
   # Maps to NEXT_VAULT_BASE_ENDPOINT
   vaultBaseEndpoint: "https://cadc-west-01.canfar.net/vault/files"
+  vaultSyncTransEndpoint: "https://cadc-west-01.canfar.net/vault/sync-trans"
 
   # CADC Access Control endpoints
   canfarAcLoginUrl: "https://staging-cadc-west-01.canfar.net/ac/login"
