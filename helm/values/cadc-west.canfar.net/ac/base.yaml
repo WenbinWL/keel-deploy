@@ -201,6 +201,17 @@ application:
           - email
           - memberOf
         signDocuments: true
+      - id: rafts-app
+        secret:
+          existingSecret: ac-oidc-rafts-app
+          key: secret
+        description: Research Announcements For The Solar System
+        accessGroup: ivo://cadc.nrc.ca/gms?skaha-users
+        claims:
+          - name
+          - email
+          - memberOf
+        signDocuments: true
 
 # Point the JVM at a pre-built truststore so LDAP TLS works without sudo.
 extraEnv:
