@@ -9,10 +9,6 @@ ingress:
         - path: /rafts
           pathType: Prefix
 
-image:
-  repository: bucket.canfar.net/rafts
-  tag: 1.0.1-20260313T155347
-
 imagePullSecrets:
   - name: bucket-registry-auth
 
@@ -33,6 +29,7 @@ application:
 
   # Maps to NEXT_VAULT_BASE_ENDPOINT
   vaultBaseEndpoint: "https://cadc-west-01.canfar.net/vault/files"
+  vaultSyncTransEndpoint: "https://cadc-west-01.canfar.net/vault/synctrans"
 
   # CADC Access Control endpoints
   canfarAcLoginUrl: "https://cadc-west-01.canfar.net/ac/login"

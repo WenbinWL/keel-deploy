@@ -9,10 +9,6 @@ ingress:
         - path: /rafts
           pathType: Prefix
 
-image:
-  repository: bucket.canfar.net/rafts
-  tag: 1.0.1-20260313T155347
-
 imagePullSecrets:
   - name: bucket-registry-auth
 
