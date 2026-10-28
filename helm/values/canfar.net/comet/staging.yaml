@@ -2,7 +2,7 @@
 # registration with the platform team before promoting the Application draft.
 ingress:
   enabled: true
-  className: nginx
+  className: traefik
   annotations: {}
   host: comet-staging.canfar.net
   path: /
